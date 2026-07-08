@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>TikTok Shop Daily Report · Upper Echelon Products</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --border:#e5e7eb; --text:#111827; --muted:#6b7280;
+    --green:#16a34a; --green-soft:#dcfce7; --red:#dc2626; --red-soft:#fee2e2;
+    --amber:#d97706; --amber-soft:#fef3c7; --blue:#2563eb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);padding:28px 20px 48px}
+  .wrap{max-width:1180px;margin:0 auto}
+  header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}
+  h1{font-size:26px;letter-spacing:-0.02em}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:18px}
+  .badge{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:#eef2ff;color:#3730a3}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:22px}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .hero{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:18px;display:flex;flex-wrap:wrap;align-items:center;gap:28px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .hero .big{font-size:44px;font-weight:700;letter-spacing:-0.03em}
+  .hero .label{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+  .hero-side{flex:1;min-width:260px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px 10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .card h3{font-size:13.5px;font-weight:600;color:#374151}
+  .val{font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:6px}
+  .delta{font-size:12.5px;font-weight:600;margin-top:2px}
+  .delta.up{color:var(--green)} .delta.down{color:var(--red)} .delta.flat{color:var(--muted)}
+  .tgt{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .tgt.above{background:var(--green-soft);color:var(--green)}
+  .tgt.below{background:var(--red-soft);color:var(--red)}
+  .tgt.neutral{background:#f3f4f6;color:var(--muted)}
+  .tgt.sync{background:var(--amber-soft);color:var(--amber)}
+  .spark{margin-top:8px;width:100%;height:64px}
+  .totals{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-top:18px;padding:18px 22px}
+  .totals h2{font-size:14px;font-weight:700;color:#374151;margin-bottom:12px}
+  .totals .row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+  .totals .item .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .totals .item .v{font-size:19px;font-weight:700;margin-top:2px}
+  footer{margin-top:26px;font-size:12px;color:var(--muted);line-height:1.7}
+  .note{color:var(--amber);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📊 TikTok Shop — Daily Report</h1>
+    <span class="badge" id="updated"></span>
+  </header>
+  <div class="sub">Upper Echelon Products · Reporting day: <strong>Tuesday, July 7, 2026</strong> · vs. Monday, July 6 · Source: Kruva</div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--green)"></span> Above 30-day avg target</span>
+    <span><span class="dot" style="background:var(--red)"></span> Below 30-day avg target</span>
+    <span>↑ / ↓ = vs. yesterday</span>
+    <span>Dashed line on charts = 30-day average</span>
+  </div>
+
+  <div class="hero" id="hero"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="totals">
+    <h2>LAST 30 DAYS (Jun 8 – Jul 7)</h2>
+    <div class="row" id="totalsRow"></div>
+  </div>
+
+  <footer>
+    Data pulled from Kruva (shop: Upper Echelon Products) on July 8, 2026.<br>
+    <span class="note">* Affiliate-attributed figures for Jul 7 were still syncing in Kruva at pull time; starred values are from the manually refreshed dashboard pull shared in Slack at 8:32 AM CT.</span><br>
+    Target = trailing 30-day daily average. Ad Spend is shown neutral (spend has no “good” direction — judge it with ROAS).
+  </footer>
+</div>
+
+<script>
+const days = ["6/8","6/9","6/10","6/11","6/12","6/13","6/14","6/15","6/16","6/17","6/18","6/19","6/20","6/21","6/22","6/23","6/24","6/25","6/26","6/27","6/28","6/29","6/30","7/1","7/2","7/3","7/4","7/5","7/6","7/7"];
+
+const S = {
+  totalGmv:[1388.80,2833.92,1012.60,1301.88,1734.22,1625.41,1044.38,815.10,581.58,583.16,656.36,427.91,687.62,406.42,747.27,619.35,557.19,605.56,707.37,378.97,1293.99,1939.80,911.57,2462.04,1999.65,717.46,577.60,1099.95,2414.63,917.74],
+  affGmv:[1388.80,2805.93,989.21,1301.88,1637.87,1551.64,910.22,737.13,518.60,529.18,632.37,427.91,598.14,380.43,720.68,595.96,501.28,605.56,604.32,326.84,1173.24,1753.91,756.83,2268.35,1899.06,598.51,516.74,1099.15,2177.00,778.79],
+  liveGmv:[518.79,1184.66,0,61.18,863.36,778.31,33.99,0,30.59,0,0,0,0,0,0,0,0,0,0,0,0,384.39,0,1034.37,730.35,119.95,0,447.95,307.03,482.29],
+  units:[49,109,44,54,65,61,43,33,24,24,23,17,26,18,30,28,20,25,26,14,51,79,39,90,73,33,23,41,105,33],
+  adSpend:[800.03,900,900,900,900,862.57,900,500,409.63,500,500,500,498.06,500,500,500,500,500,770.17,413.34,962.04,1700,1560.73,1700,1658.61,804.83,555.63,685.93,4100,833.62],
+  roas:[1.20,1.70,1.34,1.13,1.11,1.20,1.34,1.31,1.48,1.33,0.76,1.16,1.13,1.10,1.37,1.31,0.95,1.20,1.04,0.79,1.31,1.05,0.98,1.08,0.95,0.82,0.95,1.05,0.79,0.56],
+  videos:[7,11,12,8,1,4,5,7,13,5,8,7,10,7,13,12,26,18,16,18,17,24,33,22,24,11,11,22,26,31],
+  lives:[5,11,10,9,15,15,10,14,13,10,16,20,15,11,21,20,12,28,19,14,18,18,12,13,14,10,6,9,12,11],
+  creators:[6,9,12,5,1,3,5,7,10,4,8,6,9,6,13,12,26,16,13,16,12,23,22,21,22,11,11,18,20,24],
+  samples:[32,22,40,23,49,23,18,20,47,27,4,62,76,30,23,11,9,26,13,14,17,26,21,21,26,22,19,22,32,29],
+  views:[120885,120920,79322,98557,90679,72768,100447,91189,106591,76666,81392,100121,74198,69810,83359,76100,85328,94702,76133,52580,120744,192835,135832,163663,125572,84698,87689,99000,353375,164302],
+  dms:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,1]
+};
+
+const money = v => "$" + v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const moneyShort = v => "$" + Math.round(v).toLocaleString("en-US");
+const num = v => v.toLocaleString("en-US");
+const avg = a => a.reduce((x,y)=>x+y,0)/a.length;
+
+function spark(data, color, avgVal){
+  const w=280,h=64,p=4;
+  const max=Math.max(...data,avgVal), min=Math.min(...data,avgVal);
+  const x=i=>p+i*(w-2*p)/(data.length-1);
+  const y=v=>max===min?h/2:h-p-(v-min)*(h-2*p)/(max-min);
+  const pts=data.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+  const area=`M${x(0)},${h-p} L${pts.replace(/ /g," L")} L${x(data.length-1)},${h-p} Z`;
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <path d="${area}" fill="${color}" opacity="0.09"/>
+    <line x1="${p}" x2="${w-p}" y1="${y(avgVal).toFixed(1)}" y2="${y(avgVal).toFixed(1)}" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${x(data.length-1).toFixed(1)}" cy="${y(data[data.length-1]).toFixed(1)}" r="3" fill="${color}"/>
+  </svg>`;
+}
+
+function deltaTxt(cur, prev, fmt){
+  if(prev===0) return {txt:"— no prior-day base", cls:"flat"};
+  const pct=((cur-prev)/prev*100);
+  const arrow=pct>=0?"↑":"↓";
+  const cls=pct>=0?"up":"down";
+  return {txt:`${arrow} ${Math.abs(pct).toFixed(1)}% vs yesterday (${fmt(prev)})`, cls};
+}
+
+// metric config: key, label, series, format, direction ('up' good, 'neutral'), note
+const metrics=[
+  {label:"Affiliate GMV *", s:S.affGmv, fmt:money, dir:"up", sync:true},
+  {label:"LIVE-attributed GMV", s:S.liveGmv, fmt:money, dir:"up"},
+  {label:"Orders (units)", s:S.units, fmt:num, dir:"up"},
+  {label:"Ad Spend", s:S.adSpend, fmt:money, dir:"neutral"},
+  {label:"ROAS", s:S.roas, fmt:v=>v.toFixed(2), dir:"up"},
+  {label:"Videos Posted", s:S.videos, fmt:num, dir:"up"},
+  {label:"New LIVEs", s:S.lives, fmt:num, dir:"up"},
+  {label:"Creators Posting", s:S.creators, fmt:num, dir:"up"},
+  {label:"Sample Requests", s:S.samples, fmt:num, dir:"up"},
+  {label:"Video Views", s:S.views, fmt:v=>v.toLocaleString("en-US"), dir:"up"},
+  {label:"DMs Sent", s:S.dms, fmt:num, dir:"up"}
+];
+
+function card(m){
+  const cur=m.s[m.s.length-1], prev=m.s[m.s.length-2], a=avg(m.s);
+  const above=cur>=a;
+  let tgtCls, tgtTxt, color;
+  if(m.sync){ tgtCls="sync"; tgtTxt="SYNCING"; color=above?"#16a34a":"#dc2626"; }
+  else if(m.dir==="neutral"){ tgtCls="neutral"; tgtTxt=`avg ${m.fmt(a)}`; color="#6b7280"; }
+  else { tgtCls=above?"above":"below"; tgtTxt=(above?"▲ above":"▼ below")+" target"; color=above?"#16a34a":"#dc2626"; }
+  const d=deltaTxt(cur,prev,m.fmt);
+  return `<div class="card">
+    <div class="top"><h3>${m.label}</h3><span class="tgt ${tgtCls}">${tgtTxt}</span></div>
+    <div class="val">${m.fmt(cur)}</div>
+    <div class="delta ${d.cls}">${d.txt}</div>
+    <div class="delta flat" style="margin-top:1px">target (30-day avg): ${m.fmt(a)}</div>
+    ${spark(m.s,color,a)}
+  </div>`;
+}
+
+// hero: Total GMV
+(function(){
+  const s=S.totalGmv, cur=s[s.length-1], prev=s[s.length-2], a=avg(s);
+  const d=deltaTxt(cur,prev,money);
+  const above=cur>=a;
+  document.getElementById("hero").innerHTML=`
+    <div>
+      <div class="label">Total GMV — Jul 7</div>
+      <div class="big">${money(cur)}</div>
+      <div class="delta ${d.cls}" style="font-size:14px">${d.txt}</div>
+      <div style="margin-top:8px"><span class="tgt ${above?"above":"below"}" style="font-size:12px">${above?"▲ ABOVE":"▼ BELOW"} 30-DAY AVG TARGET (${money(a)})</span></div>
+    </div>
+    <div class="hero-side">${spark(s, above?"#16a34a":"#dc2626", a).replace('class="spark"','class="spark" style="height:110px"')}</div>`;
+})();
+
+document.getElementById("grid").innerHTML=metrics.map(card).join("");
+
+const totals=[
+  ["Total GMV","$33,049.50"],["Affiliate GMV","$30,006.74"],["LIVE GMV","$6,977.21"],
+  ["Ad Spend","$27,315.19"],["Blended ROAS","1.07"],["Units Sold","1,300"],
+  ["Videos Posted","429"],["LIVEs","411"],["Video Views","3,279,457"],["Sample Requests","804"]
+];
+document.getElementById("totalsRow").innerHTML=totals.map(([k,v])=>`<div class="item"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
+
+document.getElementById("updated").textContent="Last update: Wednesday, July 8 · via Kruva";
+</script>
+</body>
+</html>
