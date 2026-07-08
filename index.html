@@ -144,12 +144,13 @@ function card(m){
   if(m.sync){ tgtCls="sync"; tgtTxt="SYNCING"; color=above?"#16a34a":"#dc2626"; }
   else if(m.dir==="neutral"){ tgtCls="neutral"; tgtTxt=`avg ${m.fmt(a)}`; color="#6b7280"; }
   else { tgtCls=above?"above":"below"; tgtTxt=(above?"▲ above":"▼ below")+" target"; color=above?"#16a34a":"#dc2626"; }
+  if(m.dir==="neutral") tgtTxt=`avg ${m.fmt(Math.round(a*10)/10)}`;
   const d=deltaTxt(cur,prev,m.fmt);
   return `<div class="card">
     <div class="top"><h3>${m.label}</h3><span class="tgt ${tgtCls}">${tgtTxt}</span></div>
     <div class="val">${m.fmt(cur)}</div>
     <div class="delta ${d.cls}">${d.txt}</div>
-    <div class="delta flat" style="margin-top:1px">target (30-day avg): ${m.fmt(a)}</div>
+    <div class="delta flat" style="margin-top:1px">target (30-day avg): ${m.fmt(Math.round(a*10)/10)}</div>
     ${spark(m.s,color,a)}
   </div>`;
 }
