@@ -95,7 +95,7 @@ const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
    sync flags: value not yet fully synced in Cruva for that period */
 const GMV = {label:"Total GMV", fmt:money, dir:"up",
   s:[1388.80,2833.92,1012.60,1301.88,1734.22,1625.41,1044.38,815.10,581.58,583.16,656.36,427.91,687.62,406.42,747.27,619.35,557.19,605.56,707.37,378.97,1293.99,1939.80,911.57,2462.04,1999.65,717.46,577.60,1099.95,2414.63,917.74],
-  today:612.34, d7:{v:"$10,189.07", d:59.34}, d30:{v:"$33,049.50", d:-18.63}};
+  today:879.64, d7:{v:"$10,189.07", d:59.34}, d30:{v:"$33,049.50", d:-18.63}};
 
 const METRICS=[
  {label:"Affiliate GMV", fmt:money, dir:"up", todaySync:true, ydaySync:true,
@@ -180,7 +180,7 @@ function metricCard(m, period){
     const prev= period==="today"?m.s[m.s.length-1]:m.s[m.s.length-2];
     series = period==="today"?[...m.s,m.today]:m.s;
     if(period==="today"&&m.todaySync){
-      val="syncing…"; dl={txt:"Cruva hasn't attributed today's figure yet",cls:"flat"};
+      val="syncing…"; dl={txt:"attribution pending in Cruva — fills in on the next refresh",cls:"flat"};
       tgtCls="sync"; tgtTxt="SYNCING"; good=null; series=m.s;
     } else {
       val=m.fmt(cur);
@@ -237,7 +237,7 @@ const subTxt={
   d30:"Reporting: <strong>Last 30 days — June 8 – July 7, 2026</strong> · vs. prior 30 days"
 };
 const footTxt={
-  today:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 5 PM CT.<br><span class="note">Today's affiliate-attributed GMV, LIVE GMV, and video views are still syncing in Cruva — they attribute on a lag and will fill in by tomorrow morning's report.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
+  today:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 5 PM CT. Today's Total GMV cross-checked against Reacher's Seller Center feed ($879.64 — fresher than Cruva's intraday rollup).<br><span class="note">Today's affiliate-attributed GMV, LIVE GMV, and video views attribute on a lag in both Cruva and Reacher — neither API has them intraday. They fill in by tomorrow morning's report.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
   yday:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 5 PM CT.<br><span class="note">* Affiliate GMV for Jul 7 was still sync-lagged in Cruva at pull time; the $778.79 shown is from the manually refreshed pull shared in Slack at 8:32 AM CT.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
   d7:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 5 PM CT.<br>7-day deltas are Cruva's comparison against the prior 7-day period (Jun 24 – 30).`,
   d30:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 5 PM CT.<br>30-day deltas are Cruva's comparison against the prior 30-day period (May 9 – Jun 7).`
