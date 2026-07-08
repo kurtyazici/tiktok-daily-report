@@ -184,7 +184,7 @@ function metricCard(m, period){
       tgtCls="sync"; tgtTxt="SYNCING"; good=null; series=m.s;
     } else {
       val=m.fmt(cur);
-      dl=deltaTxt(cur,prev,m.fmt,period==="today"?"vs yesterday full day":"vs yesterday");
+      dl=deltaTxt(cur,prev,m.fmt,period==="today"?"vs yesterday full day":"vs day prior, Jul 6");
       const above=cur>=a;
       if(m.dir==="neutral"){tgtCls="neutral";tgtTxt=`avg ${m.fmt(r1(a))}`;good=null;}
       else{tgtCls=above?"above":"below";tgtTxt=(above?"▲ above":"▼ below")+" target";good=above;}
@@ -244,7 +244,7 @@ const footTxt={
 };
 const legendTxt={
   today:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg target</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg target</span><span>↑ / ↓ = vs. yesterday (full day)</span><span>Dashed line = 30-day average</span>`,
-  yday:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg target</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg target</span><span>↑ / ↓ = vs. yesterday</span><span>Dashed line = 30-day average</span>`,
+  yday:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg target</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg target</span><span>↑ / ↓ = vs. day prior (Jul 6)</span><span>Dashed line = 30-day average</span>`,
   d7:`<span><span class="dot" style="background:var(--green)"></span> Up vs prior 7 days</span><span><span class="dot" style="background:var(--red)"></span> Down vs prior 7 days</span><span>Charts show the daily trend across the window</span>`,
   d30:`<span><span class="dot" style="background:var(--green)"></span> Up vs prior 30 days</span><span><span class="dot" style="background:var(--red)"></span> Down vs prior 30 days</span><span>Charts show the daily trend across the window</span>`
 };
