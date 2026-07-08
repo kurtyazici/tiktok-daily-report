@@ -110,6 +110,9 @@ const METRICS=[
  {label:"Ad Spend", fmt:money, dir:"neutral",
   s:[800.03,900,900,900,900,862.57,900,500,409.63,500,500,500,498.06,500,500,500,500,500,770.17,413.34,962.04,1700,1560.73,1700,1658.61,804.83,555.63,685.93,4100,833.62],
   today:907.00, d7:{v:"$10,338.62", d:61.38}, d30:{v:"$27,315.19", d:282.94}},
+ {label:"GMV Max Revenue", fmt:money, dir:"up",
+  s:[960.04,1530.00,1206.00,1017.00,999.00,1035.08,1206.00,655.00,606.25,665.00,380.00,580.00,562.81,550.00,685.00,655.00,475.00,600.00,800.98,326.54,1260.27,1785.00,1529.52,1836.00,1575.68,659.96,527.85,720.23,3239.00,466.83],
+  today:997.70, d7:{v:"$9,025.55", d:33.2}, d30:{v:"$29,095.04", d:278.9}},
  {label:"ROAS", fmt:v=>v.toFixed(2), dir:"up",
   s:[1.20,1.70,1.34,1.13,1.11,1.20,1.34,1.31,1.48,1.33,0.76,1.16,1.13,1.10,1.37,1.31,0.95,1.20,1.04,0.79,1.31,1.05,0.98,1.08,0.95,0.82,0.95,1.05,0.79,0.56],
   today:1.10, d7:{v:"0.87 blended", d:-17.76}, d30:{v:"1.07 blended", d:-1.05}},
@@ -234,8 +237,8 @@ const subTxt={
   d30:"Reporting: <strong>Last 30 days — June 8 – July 7, 2026</strong> · vs. prior 30 days"
 };
 const footTxt={
-  today:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 3 PM CT.<br><span class="note">Today's affiliate-attributed GMV, LIVE GMV, and video views are still syncing in Cruva — they attribute on a lag and will fill in by tomorrow morning's report.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS.`,
-  yday:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 3 PM CT.<br><span class="note">* Affiliate GMV for Jul 7 was still sync-lagged in Cruva at pull time; the $778.79 shown is from the manually refreshed pull shared in Slack at 8:32 AM CT.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS.`,
+  today:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 3 PM CT.<br><span class="note">Today's affiliate-attributed GMV, LIVE GMV, and video views are still syncing in Cruva — they attribute on a lag and will fill in by tomorrow morning's report.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
+  yday:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 3 PM CT.<br><span class="note">* Affiliate GMV for Jul 7 was still sync-lagged in Cruva at pull time; the $778.79 shown is from the manually refreshed pull shared in Slack at 8:32 AM CT.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
   d7:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 3 PM CT.<br>7-day deltas are Cruva's comparison against the prior 7-day period (Jun 24 – 30).`,
   d30:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 3 PM CT.<br>30-day deltas are Cruva's comparison against the prior 30-day period (May 9 – Jun 7).`
 };
