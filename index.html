@@ -61,7 +61,7 @@
   <header>
     <h1>📊 TikTok Shop — Daily Report</h1>
     <div class="hdr-right">
-      <span class="badge">Last updated: Wednesday, July 8 · 5 PM CT · Source: Cruva</span>
+      <span class="badge">Last updated: Thursday, July 9 · 8:45 AM CT · Source: Cruva</span>
       <button class="theme-btn" id="themeBtn" title="Toggle day / night mode">🌙</button>
     </div>
   </header>
@@ -82,58 +82,59 @@
 </div>
 
 <script>
-/* ---------- data (pulled from Cruva, July 8 2026, 5 PM CT) ---------- */
-const days = ["6/8","6/9","6/10","6/11","6/12","6/13","6/14","6/15","6/16","6/17","6/18","6/19","6/20","6/21","6/22","6/23","6/24","6/25","6/26","6/27","6/28","6/29","6/30","7/1","7/2","7/3","7/4","7/5","7/6","7/7"];
+/* ---------- data (pulled from Cruva, July 9 2026, 8:45 AM CT) ---------- */
+const days = ["6/9","6/10","6/11","6/12","6/13","6/14","6/15","6/16","6/17","6/18","6/19","6/20","6/21","6/22","6/23","6/24","6/25","6/26","6/27","6/28","6/29","6/30","7/1","7/2","7/3","7/4","7/5","7/6","7/7","7/8"];
 
 const money=v=>"$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 const num=v=>v.toLocaleString("en-US");
 const r1=v=>Math.round(v*10)/10;
 const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
 
-/* series = daily values Jun 8 – Jul 7; today = Jul 8 partial (as of 5 PM CT)
+/* series = daily values Jun 9 – Jul 8; today = Jul 9 partial (as of 8:45 AM CT)
+   d7  = {v: 7-day total/blend,  d: % vs prior 7 days from Cruva}
    d30 = {v: 30-day total/blend, d: % vs prior 30 days from Cruva}
-   sync flags: value not yet fully synced in Cruva for that period */
-const GMV = {label:"Total GMV", fmt:money, dir:"up",
-  s:[1388.80,2833.92,1012.60,1301.88,1734.22,1625.41,1044.38,815.10,581.58,583.16,656.36,427.91,687.62,406.42,747.27,619.35,557.19,605.56,707.37,378.97,1293.99,1939.80,911.57,2462.04,1999.65,717.46,577.60,1099.95,2414.63,917.74],
-  today:879.64, d7:{v:"$10,189.07", d:59.34}, d30:{v:"$33,049.50", d:-18.63}};
+   sync flags: value not yet fully attributed in Cruva for that period */
+const GMV = {label:"Total GMV", fmt:money, dir:"up", todaySync:true,
+  s:[2833.92,1012.6,1301.88,1734.22,1625.41,1044.38,815.1,581.58,583.16,656.36,427.91,687.62,406.42,747.27,619.35,557.19,605.56,707.37,378.97,1293.99,1939.8,911.57,2462.04,1999.65,717.46,577.6,1099.95,2414.63,917.74,1094.67],
+  today:0, d7:{v:"$8,821.70", d:6.29}, d30:{v:"$32,755.37", d:-19.22}};
 
 const METRICS=[
- {label:"Affiliate GMV", fmt:money, dir:"up", todaySync:true, ydaySync:true,
-  s:[1388.80,2805.93,989.21,1301.88,1637.87,1551.64,910.22,737.13,518.60,529.18,632.37,427.91,598.14,380.43,720.68,595.96,501.28,605.56,604.32,326.84,1173.24,1753.91,756.83,2268.35,1899.06,598.51,516.74,1099.15,2177.00,778.79],
-  today:0, d7:{v:"$8,558.81", d:49.58}, d30:{v:"$30,006.74", d:-21.92}},
- {label:"LIVE-attributed GMV", fmt:money, dir:"up", todaySync:true,
-  s:[518.79,1184.66,0,61.18,863.36,778.31,33.99,0,30.59,0,0,0,0,0,0,0,0,0,0,0,0,384.39,0,1034.37,730.35,119.95,0,447.95,307.03,482.29],
-  today:0, d7:{v:"$3,121.94", d:712.18}, d30:{v:"$6,977.21", d:-75.18}},
- {label:"Orders (units)", fmt:num, dir:"up",
-  s:[49,109,44,54,65,61,43,33,24,24,23,17,26,18,30,28,20,25,26,14,51,79,39,90,73,33,23,41,105,33],
-  today:34, d7:{v:"398", d:56.69}, d30:{v:"1,300", d:-15.64}},
+ {label:"Affiliate GMV", fmt:money, dir:"up", todaySync:true,
+  s:[2805.93,989.21,1301.88,1637.87,1551.64,910.22,737.13,518.6,529.18,632.37,427.91,598.14,380.43,720.68,595.96,501.28,605.56,604.32,326.84,1173.24,1753.91,756.83,2268.35,1899.06,598.51,516.74,1099.15,2177,778.79,961.28],
+  today:0, d7:{v:"$8,030.53", d:7.23}, d30:{v:"$30,358.01", d:-21.0}},
+ {label:"LIVE-attributed GMV", fmt:money, dir:"up", todaySync:true, ydaySync:true,
+  s:[1184.66,0,61.18,863.36,778.31,33.99,0,30.59,0,0,0,0,0,0,0,0,0,0,0,0,384.39,0,1034.37,730.35,119.95,0,447.95,307.03,482.29,0],
+  today:0, d7:{v:"$2,121.56", d:49.54}, d30:{v:"$6,492.41", d:-76.18}},
+ {label:"Orders (units)", fmt:num, dir:"up", todaySync:true,
+  s:[109,44,54,65,61,43,33,24,24,23,17,26,18,30,28,20,25,26,14,51,79,39,90,73,33,23,41,105,33,54],
+  today:0, d7:{v:"362", d:11.73}, d30:{v:"1,305", d:-15.31}},
  {label:"Ad Spend", fmt:money, dir:"neutral",
-  s:[800.03,900,900,900,900,862.57,900,500,409.63,500,500,500,498.06,500,500,500,500,500,770.17,413.34,962.04,1700,1560.73,1700,1658.61,804.83,555.63,685.93,4100,833.62],
-  today:907.00, d7:{v:"$10,338.62", d:61.38}, d30:{v:"$27,315.19", d:282.94}},
+  s:[900,900,900,900,862.57,900,500,409.63,500,500,500,498.06,500,500,500,500,500,770.17,413.34,962.04,1700,1560.73,1700,1658.61,804.83,555.63,685.93,4100,833.62,1487.37],
+  today:197.35, d7:{v:"$10,125.99", d:33.13}, d30:{v:"$28,002.53", d:252.99}},
  {label:"GMV Max Revenue", fmt:money, dir:"up",
-  s:[960.04,1530.00,1206.00,1017.00,999.00,1035.08,1206.00,655.00,606.25,665.00,380.00,580.00,562.81,550.00,685.00,655.00,475.00,600.00,800.98,326.54,1260.27,1785.00,1529.52,1836.00,1575.68,659.96,527.85,720.23,3239.00,466.83],
-  today:997.70, d7:{v:"$9,025.55", d:33.2}, d30:{v:"$29,095.04", d:278.9}},
+  s:[1530,1206,1017,999,1035.08,1206,655,606.25,665,380,580,562.81,550,685,655,475,600,800.98,326.54,1260.27,1785,1529.52,1836,1575.68,659.96,527.85,720.23,3239,466.83,1398.13],
+  today:33.55, d7:{v:"$8,607.09", d:5.84}, d30:{v:"$29,682.68", d:242.33}},
  {label:"ROAS", fmt:v=>v.toFixed(2), dir:"up",
-  s:[1.20,1.70,1.34,1.13,1.11,1.20,1.34,1.31,1.48,1.33,0.76,1.16,1.13,1.10,1.37,1.31,0.95,1.20,1.04,0.79,1.31,1.05,0.98,1.08,0.95,0.82,0.95,1.05,0.79,0.56],
-  today:1.10, d7:{v:"0.87 blended", d:-17.76}, d30:{v:"1.07 blended", d:-1.05}},
+  s:[1.7,1.34,1.13,1.11,1.2,1.34,1.31,1.48,1.33,0.76,1.16,1.13,1.1,1.37,1.31,0.95,1.2,1.04,0.79,1.31,1.05,0.98,1.08,0.95,0.82,0.95,1.05,0.79,0.56,0.94],
+  today:0.17, d7:{v:"0.85 blended", d:-20.5}, d30:{v:"1.06 blended", d:-3.02}},
  {label:"Videos Posted", fmt:num, dir:"up",
-  s:[7,11,12,8,1,4,5,7,13,5,8,7,10,7,13,12,26,18,16,18,17,24,33,22,24,11,11,22,26,31],
-  today:8, d7:{v:"147", d:-3.29}, d30:{v:"429", d:29.61}},
+  s:[11,12,8,1,4,5,7,13,5,8,7,10,7,13,12,26,18,16,18,17,24,33,22,24,11,11,22,26,31,32],
+  today:4, d7:{v:"157", d:6.08}, d30:{v:"454", d:37.16}},
  {label:"New LIVEs", fmt:num, dir:"up",
-  s:[5,11,10,9,15,15,10,14,13,10,16,20,15,11,21,20,12,28,19,14,18,18,12,13,14,10,6,9,12,11],
-  today:8, d7:{v:"75", d:-38.02}, d30:{v:"411", d:0}},
+  s:[11,10,9,15,15,10,14,13,10,16,20,15,11,21,20,12,28,19,14,18,18,12,13,14,10,6,9,12,11,13],
+  today:1, d7:{v:"75", d:-38.52}, d30:{v:"419", d:4.75}},
  {label:"Creators Posting", fmt:num, dir:"up",
-  s:[6,9,12,5,1,3,5,7,10,4,8,6,9,6,13,12,26,16,13,16,12,23,22,21,22,11,11,18,20,24],
-  today:4, d7:{v:"111", d:-0.89}, d30:{v:"284", d:38.54}},
+  s:[9,12,5,1,3,5,7,10,4,8,6,9,6,13,12,26,16,13,16,12,23,22,21,22,11,11,18,20,24,21],
+  today:4, d7:{v:"112", d:0.9}, d30:{v:"295", d:44.61}},
  {label:"Sample Requests", fmt:num, dir:"up",
-  s:[32,22,40,23,49,23,18,20,47,27,4,62,76,30,23,11,9,26,13,14,17,26,21,21,26,22,19,22,32,29],
-  today:21, d7:{v:"171", d:35.71}, d30:{v:"804", d:282.86}},
- {label:"Video Views", fmt:num, dir:"up", todaySync:true,
-  s:[120885,120920,79322,98557,90679,72768,100447,91189,106591,76666,81392,100121,74198,69810,83359,76100,85328,94702,76133,52580,120744,192835,135832,163663,125572,84698,87689,99000,353375,164302],
-  today:0, d7:{v:"1,078,299", d:42.23}, d30:{v:"3,279,457", d:81.34}},
+  s:[22,40,23,49,23,18,20,47,27,4,62,76,30,23,11,9,26,13,14,17,26,21,21,26,22,19,22,32,29,25],
+  today:16, d7:{v:"175", d:26.81}, d30:{v:"797", d:233.47}},
+ {label:"Video Views", fmt:num, dir:"up", todaySync:true, ydaySync:true,
+  s:[120920,79322,98557,90679,72768,100447,91189,106591,76666,81392,100121,74198,69810,83359,76100,85328,94702,76133,52580,120744,192835,135832,163663,125572,84698,87689,99000,353375,164302,0],
+  today:0, d7:{v:"914,636", d:9.34}, d30:{v:"3,158,572", d:63.72}},
  {label:"DMs Sent", fmt:num, dir:"up",
-  s:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,1],
-  today:423, d7:{v:"17", d:null}, d30:{v:"17", d:null}}
+  s:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,1,425],
+  today:1, d7:{v:"442", d:null}, d30:{v:"442", d:null}}
 ];
 
 /* ---------- rendering ---------- */
@@ -175,22 +176,21 @@ function metricCard(m, period){
       else{tgtCls=up?"above":"below";tgtTxt=up?`▲ vs prior ${n}d`:`▼ vs prior ${n}d`;good=up;}
     }
   } else {
-    const sync = period==="today"?m.todaySync:m.ydaySync&&false; // yday affiliate uses manual value below
     const cur = period==="today"?m.today:m.s[m.s.length-1];
     const prev= period==="today"?m.s[m.s.length-1]:m.s[m.s.length-2];
     series = period==="today"?[...m.s,m.today]:m.s;
     if(period==="today"&&m.todaySync){
-      val="syncing…"; dl={txt:"attribution pending in Cruva — fills in on the next refresh",cls:"flat"};
+      val="syncing…"; dl={txt:"attribution pending in Cruva — fills in through the day",cls:"flat"};
       tgtCls="sync"; tgtTxt="SYNCING"; good=null; series=m.s;
     } else {
       val=m.fmt(cur);
-      dl=deltaTxt(cur,prev,m.fmt,period==="today"?"vs yesterday full day":"vs day prior, Jul 6");
+      dl=deltaTxt(cur,prev,m.fmt,period==="today"?"vs yesterday full day":"vs day prior, Jul 7");
       const above=cur>=a;
       if(m.dir==="neutral"){tgtCls="neutral";tgtTxt=`avg ${m.fmt(r1(a))}`;good=null;}
       else{tgtCls=above?"above":"below";tgtTxt=(above?"▲ above":"▼ below")+" target";good=above;}
       sub=`target (30-day avg): ${m.fmt(r1(a))}`;
     }
-    if(period==="yday"&&m.ydaySync){ tgtCls="sync"; tgtTxt="SYNC-LAGGED *"; }
+    if(period==="yday"&&m.ydaySync){ tgtCls="sync"; tgtTxt="SYNC-LAGGED *"; good=null; }
   }
   return `<div class="card">
     <div class="top"><h3>${m.label}</h3><span class="tgt ${tgtCls}">${tgtTxt}</span></div>
@@ -206,21 +206,22 @@ function heroHtml(period){
   let label,val,dl,badge,series;
   if(period==="d30"||period==="d7"){
     const win=m[period], n=period==="d7"?"7":"30", up=win.d>=0;
-    label=period==="d7"?"TOTAL GMV — LAST 7 DAYS (JUL 1 – JUL 7)":"TOTAL GMV — LAST 30 DAYS (JUN 8 – JUL 7)";
+    label=period==="d7"?"TOTAL GMV — LAST 7 DAYS (JUL 2 – JUL 8)":"TOTAL GMV — LAST 30 DAYS (JUN 9 – JUL 8)";
     val=win.v; series=period==="d7"?m.s.slice(23):m.s;
     dl={txt:`${up?"↑":"↓"} ${Math.abs(win.d).toFixed(1)}% vs prior ${n} days`,cls:up?"up":"down"};
     badge=`<span class="tgt ${up?"above":"below"}" style="font-size:12px">${up?"▲ ABOVE":"▼ BELOW"} PRIOR ${n}-DAY PERIOD</span>`;
   } else if(period==="today"){
-    label="TOTAL GMV — TODAY, JUL 8 (PARTIAL, AS OF 5 PM CT)"; val=money(m.today); series=[...m.s,m.today];
-    dl=deltaTxt(m.today,m.s[29],money,"vs yesterday full day");
-    badge=`<span class="tgt neutral" style="font-size:12px">PARTIAL DAY — FINAL AFTER MIDNIGHT</span>`;
+    label="TOTAL GMV — TODAY, JUL 9 (PARTIAL, AS OF 8:45 AM CT)"; series=m.s;
+    val="syncing…";
+    dl={txt:"GMV attribution pending in Cruva this early — fills in through the day",cls:"flat"};
+    badge=`<span class="tgt sync" style="font-size:12px">SYNCING — 8:45 AM PULL, PARTIAL DAY</span>`;
   } else {
-    label="TOTAL GMV — YESTERDAY, JUL 7"; val=money(m.s[29]); series=m.s;
-    dl=deltaTxt(m.s[29],m.s[28],money,"vs Monday, Jul 6");
+    label="TOTAL GMV — YESTERDAY, JUL 8"; val=money(m.s[29]); series=m.s;
+    dl=deltaTxt(m.s[29],m.s[28],money,"vs Tuesday, Jul 7");
     const above=m.s[29]>=a;
     badge=`<span class="tgt ${above?"above":"below"}" style="font-size:12px">${above?"▲ ABOVE":"▼ BELOW"} 30-DAY AVG TARGET (${money(r1(a))})</span>`;
   }
-  const good = dl.cls==="up";
+  const good = dl.cls==="up"?true:(dl.cls==="down"?false:null);
   return `<div>
       <div class="label">${label}</div>
       <div class="big">${val}</div>
@@ -231,20 +232,20 @@ function heroHtml(period){
 }
 
 const subTxt={
-  today:"Reporting: <strong>Today — Wednesday, July 8, 2026</strong> (partial day, as of 5 PM CT) · vs. yesterday",
-  yday:"Reporting: <strong>Yesterday — Tuesday, July 7, 2026</strong> · vs. Monday, July 6",
-  d7:"Reporting: <strong>Last 7 days — July 1 – July 7, 2026</strong> · vs. prior 7 days (Jun 24 – 30)",
-  d30:"Reporting: <strong>Last 30 days — June 8 – July 7, 2026</strong> · vs. prior 30 days"
+  today:"Reporting: <strong>Today — Thursday, July 9, 2026</strong> (partial day, as of 8:45 AM CT) · vs. yesterday",
+  yday:"Reporting: <strong>Yesterday — Wednesday, July 8, 2026</strong> · vs. Tuesday, July 7",
+  d7:"Reporting: <strong>Last 7 days — July 2 – July 8, 2026</strong> · vs. prior 7 days (Jun 25 – Jul 1)",
+  d30:"Reporting: <strong>Last 30 days — June 9 – July 8, 2026</strong> · vs. prior 30 days"
 };
 const footTxt={
-  today:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 5 PM CT. Today's Total GMV cross-checked against Reacher's Seller Center feed ($879.64 — fresher than Cruva's intraday rollup).<br><span class="note">Today's affiliate-attributed GMV, LIVE GMV, and video views attribute on a lag in both Cruva and Reacher — neither API has them intraday. They fill in by tomorrow morning's report.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
-  yday:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 5 PM CT.<br><span class="note">* Affiliate GMV for Jul 7 was still sync-lagged in Cruva at pull time; the $778.79 shown is from the manually refreshed pull shared in Slack at 8:32 AM CT.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
-  d7:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 5 PM CT.<br>7-day deltas are Cruva's comparison against the prior 7-day period (Jun 24 – 30).`,
-  d30:`Pulled from Cruva (shop: Upper Echelon Products) on Wednesday, July 8 at 5 PM CT.<br>30-day deltas are Cruva's comparison against the prior 30-day period (May 9 – Jun 7).`
+  today:`Pulled from Cruva (shop: Upper Echelon Products) on Thursday, July 9 at 8:45 AM CT.<br><span class="note">This is an early-morning partial pull. Today's Total GMV, Affiliate GMV, LIVE GMV, Orders, and Video Views attribute on a lag in Cruva and read as SYNCING — they fill in through the day and settle by tomorrow's report. Ad spend, creators, videos, LIVEs, samples, and DMs update in real time.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
+  yday:`Pulled from Cruva (shop: Upper Echelon Products) on Thursday, July 9 at 8:45 AM CT.<br><span class="note">* LIVE-attributed GMV and Video Views for Jul 8 were still sync-lagged in Cruva at pull time (showing $0 / 0) and finalize within ~24h. Affiliate GMV for Jul 8 is fully synced ($961.28).</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
+  d7:`Pulled from Cruva (shop: Upper Echelon Products) on Thursday, July 9 at 8:45 AM CT.<br>7-day deltas are Cruva's comparison against the prior 7-day period (Jun 25 – Jul 1).`,
+  d30:`Pulled from Cruva (shop: Upper Echelon Products) on Thursday, July 9 at 8:45 AM CT.<br>30-day deltas are Cruva's comparison against the prior 30-day period (May 10 – Jun 8).`
 };
 const legendTxt={
   today:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg target</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg target</span><span>↑ / ↓ = vs. yesterday (full day)</span><span>Dashed line = 30-day average</span>`,
-  yday:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg target</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg target</span><span>↑ / ↓ = vs. day prior (Jul 6)</span><span>Dashed line = 30-day average</span>`,
+  yday:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg target</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg target</span><span>↑ / ↓ = vs. day prior (Jul 7)</span><span>Dashed line = 30-day average</span>`,
   d7:`<span><span class="dot" style="background:var(--green)"></span> Up vs prior 7 days</span><span><span class="dot" style="background:var(--red)"></span> Down vs prior 7 days</span><span>Charts show the daily trend across the window</span>`,
   d30:`<span><span class="dot" style="background:var(--green)"></span> Up vs prior 30 days</span><span><span class="dot" style="background:var(--red)"></span> Down vs prior 30 days</span><span>Charts show the daily trend across the window</span>`
 };
