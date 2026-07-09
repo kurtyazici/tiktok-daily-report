@@ -12,6 +12,7 @@
     --amber:#d97706; --amber-soft:#fef3c7; --chip:#eef2ff; --chip-text:#3730a3;
     --tab:#ffffff; --tab-active:#111827; --tab-active-text:#ffffff; --neutral-soft:#f3f4f6;
     --shadow:0 1px 2px rgba(0,0,0,.04); --avgline:#9ca3af;
+    --prod:#ede9fe; --prod-text:#5b21b6; --prod-active:#6d28d9;
   }
   html[data-theme="night"]{
     --bg:#0e1116; --card:#161a22; --border:#262c37; --text:#e8eaf0; --muted:#98a1b3;
@@ -19,6 +20,7 @@
     --amber:#fbbf24; --amber-soft:#3a2c0a; --chip:#1e2536; --chip-text:#a5b4fc;
     --tab:#161a22; --tab-active:#e8eaf0; --tab-active-text:#0e1116; --neutral-soft:#1f2530;
     --shadow:0 1px 3px rgba(0,0,0,.4); --avgline:#556070;
+    --prod:#241b3a; --prod-text:#c4b5fd; --prod-active:#7c3aed;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);padding:28px 20px 48px;transition:background .25s,color .25s}
@@ -29,6 +31,10 @@
   .badge{display:inline-block;font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--chip);color:var(--chip-text)}
   .theme-btn{border:1px solid var(--border);background:var(--card);color:var(--text);font-size:15px;border-radius:999px;padding:5px 12px;cursor:pointer;box-shadow:var(--shadow)}
   .sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .prodtabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .prodtabs button{border:1px solid var(--border);background:var(--prod);color:var(--prod-text);font-size:13.5px;font-weight:700;padding:8px 16px;border-radius:10px;cursor:pointer;box-shadow:var(--shadow)}
+  .prodtabs button.active{background:var(--prod-active);color:#fff;border-color:var(--prod-active)}
+  .prodtabs button .px{font-weight:500;opacity:.8;font-size:12px}
   .tabs{display:inline-flex;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow)}
   .tabs button{border:none;background:var(--tab);color:var(--text);font-size:13.5px;font-weight:600;padding:8px 18px;cursor:pointer}
   .tabs button.active{background:var(--tab-active);color:var(--tab-active-text)}
@@ -41,6 +47,7 @@
   .hero-side{flex:1;min-width:260px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
   .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px 10px;box-shadow:var(--shadow)}
+  .card.blend{border-style:dashed}
   .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
   .card h3{font-size:13.5px;font-weight:600;color:var(--text);opacity:.85}
   .val{font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:6px}
@@ -51,6 +58,7 @@
   .tgt.below{background:var(--red-soft);color:var(--red)}
   .tgt.neutral{background:var(--neutral-soft);color:var(--muted)}
   .tgt.sync{background:var(--amber-soft);color:var(--amber)}
+  .tgt.blend{background:var(--prod);color:var(--prod-text)}
   .spark{margin-top:8px;width:100%;height:64px}
   footer{margin-top:26px;font-size:12px;color:var(--muted);line-height:1.7}
   .note{color:var(--amber);font-weight:600}
@@ -67,6 +75,12 @@
   </header>
   <div class="sub">Upper Echelon Products · <span id="subPeriod"></span> · Data: Cruva</div>
 
+  <div class="prodtabs" id="prodtabs">
+    <button data-s="all">All products</button>
+    <button data-s="clearrear">Clear Rear <span class="px">Bidet</span></button>
+    <button data-s="flux">Flux Phenom <span class="px">Screen Door</span></button>
+  </div>
+
   <div class="tabs" id="tabs">
     <button data-p="today">Today</button>
     <button data-p="yday" class="active">Yesterday</button>
@@ -82,60 +96,81 @@
 </div>
 
 <script>
-/* ---------- data (pulled from Cruva, July 9 2026, 8:45 AM CT) ---------- */
+/* ================= data — pulled from Cruva, July 9 2026, 8:45 AM CT =================
+   Daily series run Jun 9 – Jul 8 (30 pts). today = Jul 9 partial.
+   Video-attributed GMV = Affiliate GMV − LIVE GMV (Cruva's affiliate video split).
+   d7 = last 7 days (Jul 2–8) vs prior 7; d30 = last 30 (Jun 9–Jul 8) vs prior 30.
+   sync:true = attribution lags in Cruva this early; card shows SYNCING for "today".        */
 const days = ["6/9","6/10","6/11","6/12","6/13","6/14","6/15","6/16","6/17","6/18","6/19","6/20","6/21","6/22","6/23","6/24","6/25","6/26","6/27","6/28","6/29","6/30","7/1","7/2","7/3","7/4","7/5","7/6","7/7","7/8"];
 
+const SEG = {
+  all: {
+    GMV:{s:[2833.92,1012.6,1301.88,1734.22,1625.41,1044.38,815.1,581.58,583.16,656.36,427.91,687.62,406.42,747.27,619.35,557.19,605.56,707.37,378.97,1293.99,1939.8,911.57,2462.04,1999.65,717.46,577.6,1099.95,2414.63,917.74,1094.67],today:0,sync:true,d7:{v:"$8,821.70",d:6.29},d30:{v:"$32,755.37",d:-19.22}},
+    AFF:{s:[2805.93,989.21,1301.88,1637.87,1551.64,910.22,737.13,518.6,529.18,632.37,427.91,598.14,380.43,720.68,595.96,501.28,605.56,604.32,326.84,1173.24,1753.91,756.83,2268.35,1899.06,598.51,516.74,1099.15,2177,778.79,961.28],today:0,sync:true,d7:{v:"$8,030.53",d:7.23},d30:{v:"$30,358.01",d:-21}},
+    VID:{s:[1621.27,989.21,1240.7,774.51,773.33,876.23,737.13,488.01,529.18,632.37,427.91,598.14,380.43,720.68,595.96,501.28,605.56,604.32,326.84,1173.24,1369.52,756.83,1233.98,1168.71,478.56,516.74,617.21,1869.97,296.5,961.28],today:0,sync:true,d7:{v:"$5,908.97",d:-2.66},d30:{v:"$23,865.60",d:113.7}},
+    LIVE:{s:[1184.66,0,61.18,863.36,778.31,33.99,0,30.59,0,0,0,0,0,0,0,0,0,0,0,0,384.39,0,1034.37,730.35,119.95,0,481.94,307.03,482.29,0],today:0,sync:true,d7:{v:"$2,121.56",d:49.54},d30:{v:"$6,492.41",d:-76.18}},
+    ORD:{s:[109,44,54,65,61,43,33,24,24,23,17,26,18,30,28,20,25,26,14,51,79,39,90,73,33,23,41,105,33,54],today:0,sync:true,d7:{v:"362",d:11.73},d30:{v:"1,305",d:-15.31}},
+    VIEWS:{s:[120920,79322,98557,90679,72768,100447,91189,106591,76666,81392,100121,74198,69810,83359,76100,85328,94702,76133,52580,120744,192835,135832,163663,125572,84698,87689,99000,353375,164302,0],today:0,sync:true,d7:{v:"914,636",d:9.34},d30:{v:"3,158,572",d:63.72}},
+    VIDS:{s:[11,12,8,1,4,5,7,13,5,8,7,10,7,13,12,26,18,16,18,17,24,33,22,24,11,11,22,26,31,32],today:4,sync:false,d7:{v:"157",d:6.08},d30:{v:"454",d:37.16}},
+    LIVES:{s:[11,10,9,15,15,10,14,13,10,16,20,15,11,21,20,12,28,19,14,18,18,12,13,14,10,6,9,12,11,13],today:1,sync:false,d7:{v:"75",d:-38.52},d30:{v:"419",d:4.75}},
+    CRE:{s:[9,12,5,1,3,5,7,10,4,8,6,9,6,13,12,26,16,13,16,12,23,22,21,22,11,11,18,20,24,21],today:4,sync:false,d7:{v:"112",d:0.9},d30:{v:"295",d:44.61}},
+  },
+  clearrear: {
+    GMV:{s:[1264.65,0,61.18,863.36,778.31,33.99,0,30.59,0,112.84,0,0,0,0,0,0,0,119.98,94.12,426.81,1254.57,531.98,1896.65,1472.25,281.92,0,661.55,2058.89,734.31,508.86],today:0,sync:true,d7:{v:"$5,717.78",d:32.23},d30:{v:"$13,186.81",d:-54.52}},
+    AFF:{s:[1264.65,0,61.18,863.36,778.31,33.99,0,30.59,0,112.84,0,0,0,0,0,0,0,119.98,41.99,404.46,1068.68,474.18,1781.93,1371.66,246.93,0,661.55,1915.22,681.33,408.25],today:0,sync:true,d7:{v:"$5,284.94",d:35.82},d30:{v:"$12,321.08",d:-56.53}},
+    VID:{s:[79.99,0,0,0,0,0,0,0,0,112.84,0,0,0,0,0,0,0,119.98,41.99,404.46,684.29,474.18,747.56,641.31,140.97,0,179.61,1608.19,199.04,408.25],today:0,sync:true,d7:{v:"$3,177.37",d:28.51},d30:{v:"$5,842.66",d:428.92}},
+    LIVE:{s:[1184.66,0,61.18,863.36,778.31,33.99,0,30.59,0,0,0,0,0,0,0,0,0,0,0,0,384.39,0,1034.37,730.35,105.96,0,481.94,307.03,482.29,0],today:0,sync:true,d7:{v:"$2,107.57",d:48.55},d30:{v:"$6,478.42",d:-76.21}},
+    ORD:{s:[37,0,2,29,23,1,0,1,0,2,0,0,0,1,0,0,0,2,2,15,51,24,64,54,9,0,17,87,26,19],today:0,sync:true,d7:{v:"212",d:34.18},d30:{v:"466",d:-54.09}},
+    VIEWS:{s:[14391,16071,11001,19336,6923,7559,12086,25068,24696,29016,52157,33545,30207,33427,35185,41440,48335,39709,30075,64304,133800,91073,111611,86466,40491,37608,55168,304833,136301,0],today:0,sync:true,d7:{v:"660,867",d:27.36},d30:{v:"1,571,882",d:497.5}},
+    VIDS:{s:[0,0,0,0,0,0,0,0,0,2,2,5,5,5,6,16,15,12,16,13,21,28,18,16,10,8,19,20,29,22],today:3,sync:false,d7:{v:"124",d:0.81},d30:{v:"288",d:860}},
+    LIVES:{s:[2,0,1,1,2,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,0,1,2,1,0],today:0,sync:false,d7:{v:"6",d:200},d30:{v:"16",d:-60}},
+    CRE:{s:[0,0,0,0,0,0,0,0,0,2,2,5,4,5,6,16,13,11,14,8,20,17,17,15,10,8,15,14,22,11],today:3,sync:false,d7:{v:"84",d:-5.62},d30:{v:"189",d:894.74}},
+  },
+  flux: {
+    GMV:{s:[1541.28,1012.6,1131.22,842.08,847.1,940.4,815.1,488.01,583.16,475.39,427.91,617.63,406.42,696.89,619.35,457.51,605.56,587.39,284.85,835.19,685.23,379.59,537.4,407.17,435.54,542.73,438.4,355.74,149.44,585.81],today:0,sync:true,d7:{v:"$2,914.83",d:-25.55},d30:{v:"$18,732.09",d:103.43}},
+    AFF:{s:[1541.28,989.21,1131.22,774.51,773.33,806.24,737.13,488.01,529.18,475.39,427.91,598.14,380.43,670.3,595.96,429.59,605.56,484.34,284.85,768.78,685.23,282.65,486.42,407.17,351.58,516.74,437.6,261.78,97.46,553.03],today:0,sync:true,d7:{v:"$2,625.36",d:-27.03},d30:{v:"$17,571.02",d:99.11}},
+    VID:{s:[1541.28,989.21,1131.22,774.51,773.33,806.24,737.13,488.01,529.18,475.39,427.91,598.14,380.43,670.3,595.96,429.59,605.56,484.34,284.85,768.78,685.23,282.65,486.42,407.17,337.59,516.74,437.6,261.78,97.46,553.03],today:0,sync:true,d7:{v:"$2,611.37",d:-27.42},d30:{v:"$17,557.03",d:99.45}},
+    LIVE:{s:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13.99,0,0,0,0,0],today:0,sync:true,d7:{v:"$13.99",d:null},d30:{v:"$13.99",d:-36.67}},
+    ORD:{s:[71,44,50,35,38,41,33,22,24,19,17,25,18,27,28,18,25,24,12,35,28,15,25,17,24,22,24,18,6,35],today:0,sync:true,d7:{v:"146",d:-10.98},d30:{v:"820",d:85.52}},
+    VIEWS:{s:[87378,53157,80503,64383,55433,72255,57525,60193,37625,36865,33514,29161,26961,43388,32979,35721,40766,32426,18438,50488,54098,39908,45567,33712,38838,42791,30880,39598,21725,0],today:0,sync:true,d7:{v:"207,544",d:-26.32},d30:{v:"1,296,276",d:-2.68}},
+    VIDS:{s:[11,9,8,1,2,4,5,12,5,4,3,2,2,5,6,6,2,4,2,2,3,5,3,7,1,3,3,4,2,9],today:1,sync:false,d7:{v:"29",d:38.1},d30:{v:"135",d:-47.47}},
+    LIVES:{s:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],today:0,sync:false,d7:{v:"1",d:null},d30:{v:"1",d:null}},
+    CRE:{s:[9,9,5,1,2,4,5,9,4,4,2,2,2,5,6,6,2,2,2,2,3,5,3,6,1,3,3,4,2,9],today:1,sync:false,d7:{v:"24",d:33.33},d30:{v:"89",d:-42.95}},
+  },
+};
+
+/* shop-wide only in Cruva — shown BLENDED on product tabs */
+const BLENDED = {
+  SPEND:{s:[900,900,900,900,862.57,900,500,409.63,500,500,500,498.06,500,500,500,500,500,770.17,413.34,962.04,1700,1560.73,1700,1658.61,804.83,555.63,685.93,4100,833.62,1487.37],today:197.35,d7:{v:"$10,125.99",d:33.13},d30:{v:"$28,002.53",d:252.99}},
+  GMVMAX:{s:[1530,1206,1017,999,1035.08,1206,655,606.25,665,380,580,562.81,550,685,655,475,600,800.98,326.54,1260.27,1785,1529.52,1836,1575.68,659.96,527.85,720.23,3239,466.83,1398.13],today:33.55,d7:{v:"$8,607.09",d:5.84},d30:{v:"$29,682.68",d:242.33}},
+  ROAS:{s:[1.7,1.34,1.13,1.11,1.2,1.34,1.31,1.48,1.33,0.76,1.16,1.13,1.1,1.37,1.31,0.95,1.2,1.04,0.79,1.31,1.05,0.98,1.08,0.95,0.82,0.95,1.05,0.79,0.56,0.94],today:0.17,d7:{v:"0.85 blended",d:-20.5},d30:{v:"1.06 blended",d:-3.02}},
+  SAMPLES:{s:[22,40,23,49,23,18,20,47,27,4,62,76,30,23,11,9,26,13,14,17,26,21,21,26,22,19,22,32,29,25],today:16,d7:{v:"175",d:26.81},d30:{v:"797",d:233.47}},
+  DMS:{s:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,1,425],today:1,d7:{v:"442",d:null},d30:{v:"442",d:null}},
+};
+
 const money=v=>"$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-const num=v=>v.toLocaleString("en-US");
+const num=v=>Math.round(v).toLocaleString("en-US");
+const roasFmt=v=>v.toFixed(2);
 const r1=v=>Math.round(v*10)/10;
 const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
 
-/* series = daily values Jun 9 – Jul 8; today = Jul 9 partial (as of 8:45 AM CT)
-   d7  = {v: 7-day total/blend,  d: % vs prior 7 days from Cruva}
-   d30 = {v: 30-day total/blend, d: % vs prior 30 days from Cruva}
-   sync flags: value not yet fully attributed in Cruva for that period */
-const GMV = {label:"Total GMV", fmt:money, dir:"up", todaySync:true,
-  s:[2833.92,1012.6,1301.88,1734.22,1625.41,1044.38,815.1,581.58,583.16,656.36,427.91,687.62,406.42,747.27,619.35,557.19,605.56,707.37,378.97,1293.99,1939.8,911.57,2462.04,1999.65,717.46,577.6,1099.95,2414.63,917.74,1094.67],
-  today:0, d7:{v:"$8,821.70", d:6.29}, d30:{v:"$32,755.37", d:-19.22}};
-
 const METRICS=[
- {label:"Affiliate GMV", fmt:money, dir:"up", todaySync:true,
-  s:[2805.93,989.21,1301.88,1637.87,1551.64,910.22,737.13,518.6,529.18,632.37,427.91,598.14,380.43,720.68,595.96,501.28,605.56,604.32,326.84,1173.24,1753.91,756.83,2268.35,1899.06,598.51,516.74,1099.15,2177,778.79,961.28],
-  today:0, d7:{v:"$8,030.53", d:7.23}, d30:{v:"$30,358.01", d:-21.0}},
- {label:"LIVE-attributed GMV", fmt:money, dir:"up", todaySync:true, ydaySync:true,
-  s:[1184.66,0,61.18,863.36,778.31,33.99,0,30.59,0,0,0,0,0,0,0,0,0,0,0,0,384.39,0,1034.37,730.35,119.95,0,447.95,307.03,482.29,0],
-  today:0, d7:{v:"$2,121.56", d:49.54}, d30:{v:"$6,492.41", d:-76.18}},
- {label:"Orders (units)", fmt:num, dir:"up", todaySync:true,
-  s:[109,44,54,65,61,43,33,24,24,23,17,26,18,30,28,20,25,26,14,51,79,39,90,73,33,23,41,105,33,54],
-  today:0, d7:{v:"362", d:11.73}, d30:{v:"1,305", d:-15.31}},
- {label:"Ad Spend", fmt:money, dir:"neutral",
-  s:[900,900,900,900,862.57,900,500,409.63,500,500,500,498.06,500,500,500,500,500,770.17,413.34,962.04,1700,1560.73,1700,1658.61,804.83,555.63,685.93,4100,833.62,1487.37],
-  today:197.35, d7:{v:"$10,125.99", d:33.13}, d30:{v:"$28,002.53", d:252.99}},
- {label:"GMV Max Revenue", fmt:money, dir:"up",
-  s:[1530,1206,1017,999,1035.08,1206,655,606.25,665,380,580,562.81,550,685,655,475,600,800.98,326.54,1260.27,1785,1529.52,1836,1575.68,659.96,527.85,720.23,3239,466.83,1398.13],
-  today:33.55, d7:{v:"$8,607.09", d:5.84}, d30:{v:"$29,682.68", d:242.33}},
- {label:"ROAS", fmt:v=>v.toFixed(2), dir:"up",
-  s:[1.7,1.34,1.13,1.11,1.2,1.34,1.31,1.48,1.33,0.76,1.16,1.13,1.1,1.37,1.31,0.95,1.2,1.04,0.79,1.31,1.05,0.98,1.08,0.95,0.82,0.95,1.05,0.79,0.56,0.94],
-  today:0.17, d7:{v:"0.85 blended", d:-20.5}, d30:{v:"1.06 blended", d:-3.02}},
- {label:"Videos Posted", fmt:num, dir:"up",
-  s:[11,12,8,1,4,5,7,13,5,8,7,10,7,13,12,26,18,16,18,17,24,33,22,24,11,11,22,26,31,32],
-  today:4, d7:{v:"157", d:6.08}, d30:{v:"454", d:37.16}},
- {label:"New LIVEs", fmt:num, dir:"up",
-  s:[11,10,9,15,15,10,14,13,10,16,20,15,11,21,20,12,28,19,14,18,18,12,13,14,10,6,9,12,11,13],
-  today:1, d7:{v:"75", d:-38.52}, d30:{v:"419", d:4.75}},
- {label:"Creators Posting", fmt:num, dir:"up",
-  s:[9,12,5,1,3,5,7,10,4,8,6,9,6,13,12,26,16,13,16,12,23,22,21,22,11,11,18,20,24,21],
-  today:4, d7:{v:"112", d:0.9}, d30:{v:"295", d:44.61}},
- {label:"Sample Requests", fmt:num, dir:"up",
-  s:[22,40,23,49,23,18,20,47,27,4,62,76,30,23,11,9,26,13,14,17,26,21,21,26,22,19,22,32,29,25],
-  today:16, d7:{v:"175", d:26.81}, d30:{v:"797", d:233.47}},
- {label:"Video Views", fmt:num, dir:"up", todaySync:true, ydaySync:true,
-  s:[120920,79322,98557,90679,72768,100447,91189,106591,76666,81392,100121,74198,69810,83359,76100,85328,94702,76133,52580,120744,192835,135832,163663,125572,84698,87689,99000,353375,164302,0],
-  today:0, d7:{v:"914,636", d:9.34}, d30:{v:"3,158,572", d:63.72}},
- {label:"DMs Sent", fmt:num, dir:"up",
-  s:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,1,425],
-  today:1, d7:{v:"442", d:null}, d30:{v:"442", d:null}}
+ {k:"AFF",  label:"Affiliate GMV",         fmt:money, dir:"up"},
+ {k:"VID",  label:"Video-attributed GMV",  fmt:money, dir:"up", ydaySync:true},
+ {k:"LIVE", label:"LIVE-attributed GMV",   fmt:money, dir:"up", ydaySync:true},
+ {k:"ORD",  label:"Orders (units)",        fmt:num,   dir:"up"},
+ {k:"SPEND",label:"Ad Spend",              fmt:money, dir:"neutral", blend:true},
+ {k:"GMVMAX",label:"GMV Max Revenue",      fmt:money, dir:"up",      blend:true},
+ {k:"ROAS", label:"ROAS",                  fmt:roasFmt,dir:"up",     blend:true},
+ {k:"VIDS", label:"Videos Posted",         fmt:num,   dir:"up"},
+ {k:"LIVES",label:"New LIVEs",             fmt:num,   dir:"up"},
+ {k:"CRE",  label:"Creators Posting",      fmt:num,   dir:"up"},
+ {k:"VIEWS",label:"Video Views",           fmt:num,   dir:"up", ydaySync:true},
+ {k:"SAMPLES",label:"Sample Requests",     fmt:num,   dir:"up",      blend:true},
+ {k:"DMS",  label:"DMs Sent",              fmt:num,   dir:"up",      blend:true},
 ];
+
+const PRODNAME={all:"All products",clearrear:"Clear Rear Bidet",flux:"Flux Phenom Screen Door"};
 
 /* ---------- rendering ---------- */
 function css(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim();}
@@ -162,12 +197,14 @@ function deltaTxt(cur,prev,fmt,vsLabel){
   return {txt:`${up?"↑":"↓"} ${Math.abs(pct).toFixed(1)}% ${vsLabel} (${fmt(prev)})`, cls:up?"up":"down"};
 }
 
-function metricCard(m, period){
-  const a=avg(m.s);
+function metricCard(m, seg, period){
+  const d = m.blend ? BLENDED[m.k] : SEG[seg][m.k];
+  const isBlendProd = m.blend && seg!=="all";
+  const a=avg(d.s);
   let val, dl, tgtCls, tgtTxt, series, good, sub="";
   if(period==="d30"||period==="d7"){
-    const win=m[period], n=period==="d7"?"7":"30";
-    val=win.v; series=period==="d7"?m.s.slice(23):m.s;
+    const win=d[period], n=period==="d7"?"7":"30";
+    val=win.v; series=period==="d7"?d.s.slice(23):d.s;
     if(win.d===null){ dl={txt:`new metric — no prior ${n}-day base`,cls:"flat"}; tgtCls="neutral"; tgtTxt=`${n}-day total`; good=null; }
     else{
       const up=win.d>=0;
@@ -176,12 +213,12 @@ function metricCard(m, period){
       else{tgtCls=up?"above":"below";tgtTxt=up?`▲ vs prior ${n}d`:`▼ vs prior ${n}d`;good=up;}
     }
   } else {
-    const cur = period==="today"?m.today:m.s[m.s.length-1];
-    const prev= period==="today"?m.s[m.s.length-1]:m.s[m.s.length-2];
-    series = period==="today"?[...m.s,m.today]:m.s;
-    if(period==="today"&&m.todaySync){
+    const cur = period==="today"?d.today:d.s[d.s.length-1];
+    const prev= period==="today"?d.s[d.s.length-1]:d.s[d.s.length-2];
+    series = period==="today"?[...d.s,d.today]:d.s;
+    if(period==="today"&&d.sync){
       val="syncing…"; dl={txt:"attribution pending in Cruva — fills in through the day",cls:"flat"};
-      tgtCls="sync"; tgtTxt="SYNCING"; good=null; series=m.s;
+      tgtCls="sync"; tgtTxt="SYNCING"; good=null; series=d.s;
     } else {
       val=m.fmt(cur);
       dl=deltaTxt(cur,prev,m.fmt,period==="today"?"vs yesterday full day":"vs day prior, Jul 7");
@@ -192,17 +229,18 @@ function metricCard(m, period){
     }
     if(period==="yday"&&m.ydaySync){ tgtCls="sync"; tgtTxt="SYNC-LAGGED *"; good=null; }
   }
-  return `<div class="card">
+  if(isBlendProd){ tgtCls="blend"; tgtTxt="BLENDED · shop"; }
+  return `<div class="card${isBlendProd?" blend":""}">
     <div class="top"><h3>${m.label}</h3><span class="tgt ${tgtCls}">${tgtTxt}</span></div>
     <div class="val">${val}</div>
     <div class="delta ${dl.cls}">${dl.txt}</div>
-    ${sub?`<div class="delta flat" style="margin-top:1px">${sub}</div>`:""}
+    ${isBlendProd?`<div class="delta flat" style="margin-top:1px">shop-level — not split by product</div>`:(sub?`<div class="delta flat" style="margin-top:1px">${sub}</div>`:"")}
     ${spark(series,good,avg(series))}
   </div>`;
 }
 
-function heroHtml(period){
-  const m=GMV, a=avg(m.s);
+function heroHtml(seg, period){
+  const m=SEG[seg].GMV, a=avg(m.s);
   let label,val,dl,badge,series;
   if(period==="d30"||period==="d7"){
     const win=m[period], n=period==="d7"?"7":"30", up=win.d>=0;
@@ -231,36 +269,46 @@ function heroHtml(period){
     <div class="hero-side">${spark(series,good,avg(series),110)}</div>`;
 }
 
-const subTxt={
-  today:"Reporting: <strong>Today — Thursday, July 9, 2026</strong> (partial day, as of 8:45 AM CT) · vs. yesterday",
-  yday:"Reporting: <strong>Yesterday — Wednesday, July 8, 2026</strong> · vs. Tuesday, July 7",
-  d7:"Reporting: <strong>Last 7 days — July 2 – July 8, 2026</strong> · vs. prior 7 days (Jun 25 – Jul 1)",
-  d30:"Reporting: <strong>Last 30 days — June 9 – July 8, 2026</strong> · vs. prior 30 days"
+const periodDesc={
+  today:"Today — Thursday, July 9, 2026 (partial, as of 8:45 AM CT)",
+  yday:"Yesterday — Wednesday, July 8, 2026",
+  d7:"Last 7 days — Jul 2 – Jul 8, 2026",
+  d30:"Last 30 days — Jun 9 – Jul 8, 2026"
 };
-const footTxt={
-  today:`Pulled from Cruva (shop: Upper Echelon Products) on Thursday, July 9 at 8:45 AM CT.<br><span class="note">This is an early-morning partial pull. Today's Total GMV, Affiliate GMV, LIVE GMV, Orders, and Video Views attribute on a lag in Cruva and read as SYNCING — they fill in through the day and settle by tomorrow's report. Ad spend, creators, videos, LIVEs, samples, and DMs update in real time.</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
-  yday:`Pulled from Cruva (shop: Upper Echelon Products) on Thursday, July 9 at 8:45 AM CT.<br><span class="note">* LIVE-attributed GMV and Video Views for Jul 8 were still sync-lagged in Cruva at pull time (showing $0 / 0) and finalize within ~24h. Affiliate GMV for Jul 8 is fully synced ($961.28).</span><br>Target = trailing 30-day daily average. Ad Spend is shown neutral — judge it with ROAS. GMV Max Revenue is derived (spend × ROI), matching Cruva's GMV Max tab.`,
-  d7:`Pulled from Cruva (shop: Upper Echelon Products) on Thursday, July 9 at 8:45 AM CT.<br>7-day deltas are Cruva's comparison against the prior 7-day period (Jun 25 – Jul 1).`,
-  d30:`Pulled from Cruva (shop: Upper Echelon Products) on Thursday, July 9 at 8:45 AM CT.<br>30-day deltas are Cruva's comparison against the prior 30-day period (May 10 – Jun 8).`
-};
+function footHtml(seg,period){
+  const base=`Pulled from Cruva (shop: Upper Echelon Products) on Thursday, July 9 at 8:45 AM CT.`;
+  const prodNote = seg==="all"
+    ? `<br>Video-attributed GMV = Affiliate GMV − LIVE GMV. Ad Spend, GMV Max Revenue and ROAS are shop-wide (Cruva doesn't split ad data by product).`
+    : `<br><span class="tgt blend" style="font-size:11px">BLENDED</span> Ad Spend, GMV Max Revenue and ROAS can't be split by product in Cruva — those three cards show the shop-wide number. Everything else is <strong>${PRODNAME[seg]}</strong> only. Video-attributed GMV = Affiliate − LIVE.`;
+  let periodNote="";
+  if(period==="today") periodNote=`<br><span class="note">Early-morning partial pull: GMV, Affiliate, Video, LIVE, Orders and Views attribute on a lag and read SYNCING; they fill in through the day. Videos, LIVEs, creators update in real time.</span>`;
+  else if(period==="yday") periodNote=`<br><span class="note">* LIVE-attributed GMV and Video Views for Jul 8 were still sync-lagged in Cruva at pull time (showing $0 / 0) and finalize within ~24h. Total & Affiliate GMV for Jul 8 are fully synced.</span>`;
+  else if(period==="d7") periodNote=`<br>7-day deltas compare against the prior 7-day period (Jun 25 – Jul 1).`;
+  else periodNote=`<br>30-day deltas compare against the prior 30-day period (May 10 – Jun 8).`;
+  return base+prodNote+periodNote+`<br>Target = trailing 30-day daily average for the selected product. GMV Max Revenue is derived (spend × ROI).`;
+}
 const legendTxt={
-  today:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg target</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg target</span><span>↑ / ↓ = vs. yesterday (full day)</span><span>Dashed line = 30-day average</span>`,
-  yday:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg target</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg target</span><span>↑ / ↓ = vs. day prior (Jul 7)</span><span>Dashed line = 30-day average</span>`,
+  today:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg</span><span>↑ / ↓ = vs. yesterday (full day)</span><span>Dashed line = 30-day average</span>`,
+  yday:`<span><span class="dot" style="background:var(--green)"></span> Above 30-day avg</span><span><span class="dot" style="background:var(--red)"></span> Below 30-day avg</span><span>↑ / ↓ = vs. day prior (Jul 7)</span><span>Dashed line = 30-day average</span>`,
   d7:`<span><span class="dot" style="background:var(--green)"></span> Up vs prior 7 days</span><span><span class="dot" style="background:var(--red)"></span> Down vs prior 7 days</span><span>Charts show the daily trend across the window</span>`,
   d30:`<span><span class="dot" style="background:var(--green)"></span> Up vs prior 30 days</span><span><span class="dot" style="background:var(--red)"></span> Down vs prior 30 days</span><span>Charts show the daily trend across the window</span>`
 };
 
-let period="yday";
+let seg="all", period="yday";
 function render(){
-  document.getElementById("subPeriod").innerHTML=subTxt[period];
+  document.getElementById("subPeriod").innerHTML=`<strong>${PRODNAME[seg]}</strong> · ${periodDesc[period]}`;
   document.getElementById("legend").innerHTML=legendTxt[period];
-  document.getElementById("hero").innerHTML=heroHtml(period);
-  document.getElementById("grid").innerHTML=METRICS.map(m=>metricCard(m,period)).join("");
-  document.getElementById("foot").innerHTML=footTxt[period];
+  document.getElementById("hero").innerHTML=heroHtml(seg,period);
+  document.getElementById("grid").innerHTML=METRICS.map(m=>metricCard(m,seg,period)).join("");
+  document.getElementById("foot").innerHTML=footHtml(seg,period);
   document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("active",b.dataset.p===period));
+  document.querySelectorAll("#prodtabs button").forEach(b=>b.classList.toggle("active",b.dataset.s===seg));
 }
 document.getElementById("tabs").addEventListener("click",e=>{
-  if(e.target.dataset.p){period=e.target.dataset.p;render();}
+  const b=e.target.closest("button"); if(b&&b.dataset.p){period=b.dataset.p;render();}
+});
+document.getElementById("prodtabs").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(b&&b.dataset.s){seg=b.dataset.s;render();}
 });
 
 /* ---------- theme ---------- */
@@ -269,10 +317,10 @@ function setTheme(t){
   document.documentElement.setAttribute("data-theme",t);
   btn.textContent=t==="day"?"🌙":"☀️";
   try{localStorage.setItem("uep-theme",t)}catch(e){}
-  render(); // re-render so sparkline colors pick up theme vars
+  render();
 }
 btn.addEventListener("click",()=>setTheme(document.documentElement.getAttribute("data-theme")==="day"?"night":"day"));
-let saved="day"; // day mode is the default; night mode only if the user chose it
+let saved="day";
 try{saved=localStorage.getItem("uep-theme")||"day"}catch(e){}
 setTheme(saved);
 </script>
