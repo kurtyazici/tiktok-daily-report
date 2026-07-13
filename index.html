@@ -82,6 +82,8 @@
   .up{color:var(--green)} .down{color:var(--red)}
   footer{margin-top:26px;font-size:12px;color:var(--muted);line-height:1.7}
   .note{color:var(--amber);font-weight:600}
+  .src{font-size:11px;color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
+  .src:hover{color:var(--prod-active);border-color:var(--prod-active)}
   .hide{display:none}
 </style>
 </head>
@@ -262,6 +264,14 @@ function ydayLagged(m, seg){
   if(m.k==="VIEWS") return sd.GMV.s[29]>0 && sd.VIEWS.s[29]===0;
   return false;
 }
+/* Per-metric data source. Ad metrics originate from TikTok GMV Max; the rest are
+   Cruva's read of TikTok Shop. Links go to the source's relevant page for verification. */
+const SRC_TT_ADS={l:"TikTok GMV Max",u:"https://seller-us.tiktok.com/marketing"};
+const SRC_CRUVA={l:"Cruva",u:"https://app.cruva.com"};
+function srcLink(k){
+  const s=(k==="SPEND"||k==="GMVMAX"||k==="ROAS")?SRC_TT_ADS:SRC_CRUVA;
+  return `<div style="margin-top:3px"><a class="src" href="${s.u}" target="_blank" rel="noopener">source: ${s.l} ↗</a></div>`;
+}
 function metricCard(m, seg, period){
   const d = m.blend ? BLENDED[m.k] : SEG[seg][m.k];
   const isBlendProd = m.blend && seg!=="all";
@@ -300,6 +310,7 @@ function metricCard(m, seg, period){
     <div class="val">${val}</div>
     <div class="delta ${dl.cls}">${dl.txt}</div>
     ${isBlendProd?`<div class="delta flat" style="margin-top:1px">shop-level — not split by product</div>`:(sub?`<div class="delta flat" style="margin-top:1px">${sub}</div>`:"")}
+    ${srcLink(m.k)}
     ${spark(series,good,avg(series))}
   </div>`;
 }
@@ -329,6 +340,7 @@ function heroHtml(seg, period){
       <div class="big">${val}</div>
       <div class="delta ${dl.cls}" style="font-size:14px">${dl.txt}</div>
       <div style="margin-top:8px">${badge}</div>
+      <div style="margin-top:8px"><a class="src" href="https://app.cruva.com" target="_blank" rel="noopener">source: Cruva ↗</a> · <a class="src" href="https://seller-us.tiktok.com/compass/data-overview?shop_region=US" target="_blank" rel="noopener">cross-check: TikTok Analytics ↗</a></div>
     </div>
     <div class="hero-side">${spark(series,good,avg(series),110)}</div>`;
 }
