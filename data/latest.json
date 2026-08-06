@@ -9,13 +9,16 @@
     "pulled_on": "2026-08-06",
     "data_through": "2026-08-04",
     "status": "complete",
-    "note": "August 5 Seller Center totals are present in Cruva, but affiliate/video/sample attribution is still syncing; August 4 is the latest complete reporting day."
+    "note": "Updated August 6. August 5 Seller Center and GMV Max totals are confirmed in Cruva; affiliate/video attribution is still syncing. Rolling periods remain through August 4, the latest fully attributed day."
   },
   "latest_source_check": {
     "date": "2026-08-05",
-    "seller_center_gmv": 3200.91,
-    "orders": 125,
-    "units": 140,
+    "seller_center_gmv": 3200.41,
+    "orders": 146,
+    "units": 171,
+    "gmv_max_revenue": 3029.63,
+    "gmv_max_spend": 3482.01,
+    "gmv_max_roas": 0.8700807866720658,
     "attribution_status": "partial_syncing"
   },
   "periods": {
